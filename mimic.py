@@ -46,13 +46,27 @@ columns, so the output looks better.
 import random
 import sys
 
+def read_file(filename):
+    file = open(filename, 'r')
+    return file.read().split()
+
 
 def mimic_dict(filename):
     """Returns mimic dict mapping each word to list of words which follow it."""
-    # +++your code here+++
-    raise NotImplementedError("Get to Work!")
+    words = read_file(filename)
+    word_dict = {}
+    for word_index, word in enumerate(words):
+        if word_index < (len(words) - 1):
+            if word in word_dict:
+                word_dict[word].append(words[word_index + 1])
+            else:
+                word_dict[word] = [words[word_index + 1]]
 
+    word_dict[''] = 'Alice'
+    return word_dict
 
+# if the file is split on whitespace and the seed word is given as whitespace
+# then there will be no value list for the seed word and this function wont do anything?
 def print_mimic(mimic_dict, word):
     """Given mimic dict and start word, prints 200 random words:
         - Start with '' (empty string) as a seed word.
@@ -61,8 +75,13 @@ def print_mimic(mimic_dict, word):
         - Randomly select a new seed word from this word list
         - Repeat this process 200 times
     """
-    # +++your code here+++
-    raise NotImplementedError("Get to Work!")
+    word_salad = [mimic_dict[word]]
+    for i in range(200):
+        next_word_list = mimic_dict[word_salad[-1]]
+        next_word = next_word_list[random.randint(0, len(next_word_list) - 1)]
+        word_salad.append(next_word)
+
+    print(" ".join(word_salad))
 
 
 # Provided main(), calls mimic_dict() and mimic()
